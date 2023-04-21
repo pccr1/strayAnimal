@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.AnimalInfoMapper">
+
+    <!--小动物模糊查询-->
+    <select id="selectAnimal" resultType="com.ztc.strayanimal.entiy.AnimalInfo">
+        SELECT a.animal_id,a.animal_name,a.species,r.rescue_station_name
+        FROM animal_info AS a JOIN rescue_station_info AS r
+        ON a.animal_rescue_station_id = r.rescue_station_id
+        <where>
+                 a.is_delete = 0
+                 <if test="vag.animalName != null and vag.animalName != ''">
+                     and a.animal_name like CONCAT('%',#{vag.animalName},'%')
+                 </if>
+                 <if test="vag.species != null and vag.species != ''">
+                     and a.species like CONCAT('%',#{vag.species},'%')
+                 </if>
+        </where>
+        order by a.update_time desc
+    </select>
+
+    <!--Page<AnimalInfo>  getThisPageAllAnilmalsInfo(@Param("page") Page<AnimalInfo> page,@Param("vag") Vague vague);-->
+      <select id="getThisPageAllAnilmalsInfo" resultType="com.ztc.strayanimal.entiy.ExportAnimal" >
+          SELECT
+              animal_info.user_id,
+              animal_info.animal_id,
+              animal_info.animal_name,
+              animal_info.animal_sex,
+              animal_info.animal_age,
+              animal_info.species,
+              animal_info.varieties,
+              animal_info.vaccination,
+              animal_info.animal_adoption,
+              animal_info.vaccination_time,
+              animal_info.sterilization,
+              animal_info.sterilization_time,
+              animal_info.repellent,
+              animal_info.repellent_time,
+              user_info.user_realname,
+              user_info.user_phone,
+              user_info.user_email,
+              rescue_station_info.rescue_station_name,
+              user_info.user_address
+          FROM
+              animal_info
+                  INNER JOIN user_info ON animal_info.user_id = user_info.user_id
+                  INNER JOIN rescue_station_info ON animal_info.animal_rescue_station_id = rescue_station_info.rescue_station_id
+          WHERE
+              animal_info.animal_adoption != '未领养'
+
+      </select>
+    <!--小动物删除-->
+
+    <update id="deleteAnimalInfo" >
+        update animal_info set is_delete = 1 where animal_id = #{animalId};
+    </update>
+
+    <!--领养信息 查看详情-->
+    <select id="selectAdoptInfo" resultType="com.ztc.strayanimal.entiy.AnimalInfo">
+        SELECT u.user_id,u.user_realname,u.user_phone,u.user_address,a.animal_adoption,u.user_email,
+               a.create_time,a.animal_id,
+        a.animal_id,a.animal_name,a.animal_sex,a.animal_age,a.sterilization,a.species,r.rescue_station_name
+
+        FROM user_info AS u JOIN animal_info AS a JOIN rescue_station_info AS r
+        ON u.user_id=a.user_id AND a.animal_rescue_station_id=r.rescue_station_id
+        WHERE u.user_id=#{userId} and a.animal_id=#{animalId}
+    </select>
+    <!--领养信息查询-->
+    <select id="selectAdoptInfos" resultType="com.ztc.strayanimal.entiy.AnimalInfo">
+        SELECT u.user_id,u.user_realname,u.user_phone,a.animal_id,a.animal_name,a.species,a.animal_adoption
+        FROM user_info AS u JOIN animal_info AS a
+        ON u.user_id=a.user_id
+        <!--WHERE a.animal_adoption!="未领养"-->
+        <where>
+            a.animal_adoption!="未领养"
+            <if test="animalAdoption !=null and animalAdoption !=''">
+                and a.animal_adoption = #{animalAdoption}
+            </if>
+        </where>
+    </select>
+
+    <!--小动物查询 查看详情-->
+    <select id="selectAnimals" resultType="com.ztc.strayanimal.entiy.AnimalInfo">
+        select *
+        from animal_info JOIN rescue_station_info
+        ON animal_info.animal_rescue_station_id = rescue_station_info.rescue_station_id
+        WHERE animal_info.is_delete = 0 and animal_info.animal_Id = #{animalId}
+    </select>
+</mapper>

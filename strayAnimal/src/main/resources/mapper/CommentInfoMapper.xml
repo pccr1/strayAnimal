@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.CommentInfoMapper">
+
+    <!--根据帖子ID查评论-->
+    <select id="selectCommentInfo" resultType="com.ztc.strayanimal.entiy.CommentInfo">
+        SELECT u.user_avatar, u.user_net_work_name, u.user_title, u.user_level,
+            co.comment_id, co.user_id, co.comment_text, co.comment_like, co.create_time
+        FROM post_info AS po JOIN comment_info AS co JOIN user_info AS u
+        ON po.post_id = co.post_id and co.user_id = u.user_id
+        WHERE po.is_delete = 0
+          and co.is_delete = 0
+          and co.post_id = #{postId}
+    </select>
+
+    <!--添加评论-->
+    <insert id="insertCommentInfo" parameterType="com.ztc.strayanimal.entiy.CommentInfo" useGeneratedKeys="true" keyProperty="comment_id">
+        INSERT INTO comment_info (post_id, user_id, comment_text, create_time, update_time) VALUES (#{postId}, #{userId}, #{commentText}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!--点赞-->
+    <update id="likeIs">
+        update comment_info set comment_like = comment_like + 1 where comment_id = #{commentId};
+    </update>
+
+    <!--取消点赞-->
+    <update id="noLikeIs">
+        update comment_info set comment_like = comment_like - 1 where comment_id = #{commentId};
+    </update>
+
+    <!--逻辑删除-->
+    <update id="deleteCommentInfo">
+        update comment_info set is_delete = 1 where comment_id = #{commentId};
+    </update>
+</mapper>

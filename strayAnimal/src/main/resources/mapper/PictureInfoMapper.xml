@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.PictureInfoMapper">
+
+    <!--根据ID查图片-->
+    <select id="selectPictureInfo" resultType="com.ztc.strayanimal.entiy.PictureInfo">
+        SELECT pi.picture_id, pi.picture_url, pi.create_time
+        FROM picture_info AS pi
+        WHERE pi.is_delete = 0
+        <if test="pi.postId != null and pi.postId != ''">
+          and pi.post_id = #{pi.postId}
+        </if>
+        <if test="pi.commentId != null and pi.commentId != ''">
+          and pi.comment_id = #{pi.commentId}
+        </if>
+        <if test="pi.animalId != null and pi.animalId != ''">
+          and pi.animal_id = #{pi.animalId}
+        </if>
+    </select>
+
+    <!--逻辑删除-->
+    <update id="deletePictureInfo">
+        update picture_info set is_delete = 1 where picture_id = #{pictureId};
+    </update>
+</mapper>

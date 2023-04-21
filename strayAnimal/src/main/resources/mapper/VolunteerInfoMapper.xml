@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.VolunteerInfoMapper">
+
+    <!--志愿申请-->
+    <select id="selectVolunteerInfo" resultType="com.ztc.strayanimal.entiy.VolunteerInfo">
+        SELECT u.user_id,u.user_realname,u.user_sex,u.user_age,u.user_ID_number,
+               u.user_address,u.user_phone,v.volunteer_id,v.volunteer_old_activities,v.adoption_notes
+        FROM user_info AS u JOIN volunteer_info AS v
+        ON u.user_id=v.volunteer_user_id
+        WHERE v.volunteer_examine_state=0
+          and v.is_delete = 0
+          and u.is_delete = 0
+          <if test="volunteerId !=null and volunteerId !=''">
+                and v.volunteer_id=#{volunteerId}
+          </if>
+    </select>
+
+    <!--保存暂返信息-->
+    <update id="updateVolunteerReply">
+        update volunteer_info set volunteer_reply = #{volunteerReply} where volunteer_id = #{volunteerId};
+    </update>
+
+    <!--同意成为志愿者-->
+    <update id="updateVolunteerExamineState">
+        update volunteer_info set volunteer_examine_state = 1 where volunteer_id = #{volunteerId};
+    </update>
+
+    <!--逻辑删除-->
+    <update id="deleteVolunteerInfo">
+        update volunteer_info set is_delete = 1 where volunteer_id = #{volunteerId};
+    </update>
+
+    <!--模糊查询志愿者-->
+    <select id="selectVol" resultType="com.ztc.strayanimal.entiy.VolunteerInfo">
+        SELECT v.volunteer_id,u.user_realname,u.user_phone,v.volunteer_activities_number,v.volunteer_title,u.user_address
+        FROM user_info AS u JOIN volunteer_info AS v
+        ON u.user_id = v.volunteer_user_id
+        WHERE u.is_delete = 0
+          and v.is_delete = 0
+          and v.volunteer_examine_state = 1
+        <if test="vag.userRealname != null and vag.userRealname != ''">
+          and u.user_realname like CONCAT('%',#{vag.userRealname},'%')
+        </if>
+        <if test="vag.userPhone != null and vag.userPhone != ''">
+            and u.user_phone like CONCAT('%',#{vag.userPhone},'%')
+        </if>
+    </select>
+
+    <!--查看详情-->
+    <select id="selectVolunteer" resultType="com.ztc.strayanimal.entiy.VolunteerInfo">
+        SELECT v.volunteer_id,v.volunteer_user_id,u.user_realname,u.user_net_work_name,u.user_ID_number,u.user_sex,
+               u.user_phone,u.user_birthday,v.volunteer_title,v.volunteer_activities_number,u.user_address,
+               v.volunteer_old_activities,v.create_time,v.update_time
+        FROM user_info AS u JOIN volunteer_info AS v
+        ON u.user_id = v.volunteer_user_id
+        WHERE u.is_delete = 0
+          and v.is_delete = 0
+          and v.volunteer_examine_state = 1
+          and v.volunteer_id = #{volunteerId}
+    </select>
+</mapper>

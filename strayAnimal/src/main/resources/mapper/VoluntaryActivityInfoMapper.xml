@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.VoluntaryActivityInfoMapper">
+
+    <!--模糊查询志愿活动-->
+    <select id="selectVoluntaryActivityInfo" resultType="com.ztc.strayanimal.entiy.VoluntaryActivityInfo">
+        SELECT DISTINCT v1.voluntary_activity_id,v1.voluntary_activity_name,v1.voluntary_activity_time,
+        v1.voluntary_activity_address,v1.voluntary_activity_people_numble,v1.status,
+        v1.voluntary_activity_detailed_information
+        FROM voluntary_activity_info v1, volunteer_info v2 , user_info u
+        where
+        v1.is_delete = 0
+        and v2.is_delete = 0
+        and u.is_delete = 0
+        <if test="vag.userRealname !=null and vag.userRealname !=''">
+            and v1.volunteer_id = v2.volunteer_id and v2.volunteer_user_id = u.user_id
+        </if>
+        <if test="vag.volunteerId !=null and vag.volunteerId !=''">
+            and v1.volunteer_id = #{vag.volunteerId}
+        </if>
+        <if test="vag.voluntaryActivityName !=null and vag.voluntaryActivityName !=''">
+            and v1.voluntary_activity_name like CONCAT('%',#{vag.voluntaryActivityName},'%')
+        </if>
+        <if test="vag.userRealname !=null and vag.userRealname !=''">
+            and u.user_realname like CONCAT('%',#{vag.userRealname},'%')
+        </if>
+        <if test="vag.status !=null and vag.status !=''">
+            and v1.status = #{vag.status}
+        </if>
+    </select>
+
+    <!--查看详情 活动详情信息-->
+    <select id="selectVoluntaryActivityDetailedInformation" resultType="com.ztc.strayanimal.entiy.VoluntaryActivityInfo">
+        SELECT DISTINCT voluntary_activity_detailed_information
+        FROM voluntary_activity_info
+        WHERE is_delete = 0
+          and voluntary_activity_id = #{voluntaryActivityId}
+    </select>
+
+    <!--查询参加活动的志愿者-->
+    <select id="selectVolunteer" resultType="com.ztc.strayanimal.entiy.VoluntaryActivityInfo">
+        SELECT v1.volunteer_id,u.user_realname,v2.volunteer_title
+        FROM voluntary_activity_info AS v1 JOIN volunteer_info AS v2 JOIN user_info AS u
+        ON v1.volunteer_id = v2.volunteer_id and v2.volunteer_user_id = u.user_id
+        WHERE v2.volunteer_examine_state = 1
+          and v1.is_delete = 0
+          and v2.is_delete = 0
+          and u.is_delete = 0
+          and v1.voluntary_activity_id = #{voluntaryActivityId}
+    </select>
+
+    <!--查询无志愿者数据的原始志愿活动信息-->
+    <select id="selectTary" resultType="com.ztc.strayanimal.entiy.VoluntaryActivityInfo">
+        SELECT DISTINCT voluntary_activity_id,voluntary_activity_name,voluntary_activity_address,voluntary_activity_time,
+               voluntary_activity_people_numble,status,voluntary_activity_detailed_information
+        FROM voluntary_activity_info
+        WHERE is_delete = 0
+          and voluntary_activity_id = #{voluntaryActivityId}
+    </select>
+
+    <!--查询志愿者ID对应姓名-->
+    <select id="selectTeer" resultType="com.ztc.strayanimal.entiy.VoluntaryActivityInfo">
+        SELECT u.user_realname
+        FROM volunteer_info AS v JOIN user_info AS u
+        ON v.volunteer_user_id = u.user_id
+        WHERE v.is_delete = 0
+          and v.volunteer_examine_state = 1
+          and u.is_delete = 0
+          and v.volunteer_id = #{volunteerId}
+    </select>
+
+    <!--删除志愿活动-->
+    <update id="deleteVoluntaryActivity">
+        update voluntary_activity_info set is_delete = 1 where voluntary_activity_id = #{voluntaryActivityId};
+    </update>
+
+    <!--删除参加该志愿活动的志愿者-->
+    <update id="deleteVolunteer">
+        update voluntary_activity_info
+        set is_delete = 1
+        where voluntary_activity_id = #{voluntaryActivityId}
+          and volunteer_id = #{volunteerId};
+    </update>
+
+    <!--查询最大的志愿活动ID-->
+    <select id="selectMax" resultType="com.ztc.strayanimal.entiy.VoluntaryActivityInfo">
+        SELECT MAX(voluntary_activity_id) AS ma
+        FROM voluntary_activity_info
+        WHERE is_delete = 0
+    </select>
+</mapper>

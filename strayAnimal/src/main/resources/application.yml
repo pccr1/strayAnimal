@@ -1,0 +1,35 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#  servlet:
+#    multipart:
+#      max-file-size: 5MB       # 单个文件的最大值
+#      max-request-size: 20MB   # 上传文件总的最大值
+
+    #url: jdbc:mysql://vipgz1.91tunnel.com:10004/cat?useUnicode=true&characterEncoding=UTF-8&userSSL=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/cat?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 111111
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+qiniu:
+  accessKey: 1A2t7EbnTTgFzWBzbX1SOK9dh6n0dLG0NYhw6XPL
+  secretKey: 4XwZ1SFSfNs_rf2CNozBC3DO-hC6NCfSFZdwyCL0
+
+
+
+  #qiniu.accessKey=1A2t7EbnTTgFzWBzbX1SOK9dh6n0dLG0NYhw6XPL
+  #qiniu.secretKey=4XwZ1SFSfNs_rf2CNozBC3DO-hC6NCfSFZdwyCL0
+  # 上传文件总的最大值
+  #spring.servlet.multipart.max-request-size=20MB
+  # 单个文件的最大值
+  #spring.servlet.multipart.max-file-size=5MB5

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.UserInfoMapper">
+
+    <!--模糊查询用户-->
+    <select id="selectUserInfo" resultType="com.ztc.strayanimal.entiy.UserInfo">
+        SELECT user_id,user_account,user_net_work_name,user_level,create_time
+        FROM user_info
+        WHERE is_delete = 0
+        <if test="vag.userId != null and vag.userId != ''">
+          and user_id like CONCAT('%',#{vag.userId},'%')
+        </if>
+        <if test="vag.userAccount != null and vag.userAccount != ''">
+          and user_account like CONCAT('%',#{vag.userAccount},'%')
+        </if>
+    </select>
+
+    <!--查看详情-->
+    <select id="selectUser" resultType="com.ztc.strayanimal.entiy.UserInfo">
+        SELECT user_id,user_net_work_name,user_avatar,user_account,user_level,user_realname,user_ID_number,
+               user_sex,user_age,user_birthday,user_nation,user_phone,user_email,user_address,create_time,update_time
+        FROM user_info
+        WHERE is_delete = 0
+          and user_id = #{userId}
+    </select>
+
+    <!--登录-->
+    <select id="selectUserAccount" resultType="com.ztc.strayanimal.entiy.UserInfo">
+        SELECT user_id,user_account,user_password
+        FROM user_info
+        WHERE is_delete = 0
+          and user_account = #{userAccount}
+    </select>
+
+    <!--逻辑删除（注销）-->
+    <update id="deleteUserInfo">
+        update user_info set is_delete = 1 where user_id = #{userID};
+    </update>
+</mapper>

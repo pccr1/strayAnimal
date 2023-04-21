@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.SosInfoMapper">
+
+    <!--救助信息列表-->
+    <select id="selectSosInfo" resultType="com.ztc.strayanimal.entiy.SosInfo">
+        SELECT s.sos_name,s.sos_address,u.user_realname,u.user_phone,s.create_time,s.sos_detailed_information
+        FROM sos_info AS s JOIN user_info AS u
+        ON s.user_id = u.user_id
+        WHERE s.is_delete = 0
+        <if test="vag.sosStatus !=null and vag.sosStatus !=''">
+            and s.sos_status = #{vag.sosStatus}
+        </if>
+        <if test="vag.sosId !=null and vag.sosId !=''">
+            and s.sos_id = #{vag.sosId}
+        </if>
+    </select>
+
+    <!--设置为已处理-->
+    <update id="updateSosStatus">
+        update sos_info set sos_status = '已处理' where sos_id = #{sosId};
+    </update>
+
+    <!--保存暂返信息-->
+    <update id="updateSosReply">
+        update sos_info set sos_reply = #{sosReply} where sos_id = #{sosId};
+    </update>
+
+    <!--逻辑删除-->
+    <update id="deleteSosInfo">
+        update sos_info set is_delete = 1 where sos_id = #{sosId};
+    </update>
+</mapper>

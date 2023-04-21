@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.RescueStationInfoMapper">
+
+    <!--模糊查询救助站-->
+    <select id="selectRescueStationInfo" resultType="com.ztc.strayanimal.entiy.RescueStationInfo">
+        SELECT rescue_station_picture,rescue_station_name,rescue_station_capacity,rescue_current_capacity,
+               rescue_station_principal,rescue_station_phone,rescue_station_address,rescue_station_id
+        FROM rescue_station_info
+        WHERE is_delete = 0
+        <if test="vag.rescueStationName != null and vag.rescueStationName != ''">
+          and rescue_station_name like CONCAT('%',#{vag.rescueStationName},'%')
+        </if>
+        <if test="vag.rescueStationPrincipal != null and vag.rescueStationPrincipal != ''">
+            and rescue_station_principal like CONCAT('%',#{vag.rescueStationPrincipal},'%')
+        </if>
+    </select>
+
+    <!--逻辑删除-->
+    <update id="deleteRescueStationInfo">
+        update rescue_station_info set is_delete = 1 where rescue_station_id = #{rescueStationId};
+    </update>
+</mapper>

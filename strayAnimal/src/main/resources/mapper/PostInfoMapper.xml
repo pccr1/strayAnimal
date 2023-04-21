@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.strayanimal.mapper.PostInfoMapper">
+
+    <!--帖子预览-->
+    <select id="selectPostInfo" resultType="com.ztc.strayanimal.entiy.PostInfo">
+        SELECT u.user_avatar, u.user_net_work_name, u.user_title, u.user_level,
+               po.post_headline, po.post_text, po.post_like,po.create_time,po.post_id
+        FROM post_info AS po JOIN user_info AS u
+        ON po.user_id = u.user_id
+        WHERE po.is_delete = 0
+        <if test="postHeadline != null and postHeadline != ''">
+            and po.post_headline like CONCAT('%',#{postHeadline},'%')
+        </if>
+        ORDER BY po.create_time DESC;
+    </select>
+
+    <!--添加帖子-->
+    <insert id="insertPostInfo" parameterType="com.ztc.strayanimal.entiy.PostInfo" useGeneratedKeys="true" keyProperty="postId">
+        INSERT INTO post_info (user_id, post_headline, post_text) VALUES (#{userId}, #{postHeadline}, #{postText})
+    </insert>
+
+    <!--点赞-->
+    <update id="likeIs">
+        update post_info set post_like = post_like + 1 where post_id = #{postId};
+    </update>
+
+    <!--取消点赞-->
+    <update id="noLikeIs">
+        update post_info set post_like = post_like - 1 where post_id = #{postId};
+    </update>
+
+    <!--逻辑删除-->
+    <update id="deletePostInfo">
+        update post_info set is_delete = 1 where post_id = #{postId};
+    </update>
+</mapper>
