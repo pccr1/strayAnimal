@@ -1,5 +1,7 @@
 package com.ztc.strayanimal.controller;
 
+import com.ztc.strayanimal.entiy.AnimalInfo;
+import com.ztc.strayanimal.entiy.AnswerInfo;
 import com.ztc.strayanimal.service.AnswerInfoService;
 import com.ztc.strayanimal.util.JsonResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,16 @@ public class AnswerController {
     @PostMapping("/selectAnswerInfo")
     public JsonResult selectAnswerInfo(@RequestParam Long commentId) {
         return answerInfoService.selectAnswerInfo(commentId);
+    }
+
+    /**
+     * 发送帖子
+     * @param answerInfo
+     * @return
+     */
+    @PostMapping("/addAnswerInfo")
+    public JsonResult addAnswerInfo(@ModelAttribute AnswerInfo answerInfo) {
+        return answerInfoService.addAnswerInfo(answerInfo);
     }
 
     /**

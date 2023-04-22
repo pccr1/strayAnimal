@@ -23,7 +23,7 @@
     </div>
     <div class="zhengwen">
         <!-- 正文 -->
-        <span>{{ Obj.commentText }}</span>
+        <span @click.self="onTextClick">{{ Obj.commentText }}</span>
         <!-- 图片 -->
         <div class="img">
             <div class="block" 
@@ -134,50 +134,54 @@ import CommentFooter from './CommentFooter.vue';
                 this.zan -= 1
                 this.like = false
             }
-        },
-        jiazai1 () {
-            const formData = new FormData()
-            formData.append('commentId', this.Obj.commentId)
-            this.$axios.post('http://localhost:9090/picture/info/selectPictureInfo',formData,{
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            .then(response => {
-                this.srcList = response.data.object
-            })
-            .catch(error => {
-                console.log(error);
-            });
-            this.zan = this.Obj.commentLike
-        },
-        jiazai2 (){
-            const formData = new FormData()
-            formData.append('commentId', this.Obj.commentId)
-            this.$axios.post('http://localhost:9090/answer/info/selectAnswerInfo',formData,{
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            .then(response => {
-                this.huifu = response.data.object
-                // console.log(this.huifu)
-                let objectSize = 0;
-                for(let k in response.data.object) {
-                    objectSize++
-                }
-                this.max += objectSize
-                if(this.max>1){
-                    this.count = 2
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        },
-        tianjia(fit) {
-            this.currentUrl.push(fit.pictureUrl);
-        },
+            },
+            jiazai1 () {
+                const formData = new FormData()
+                formData.append('commentId', this.Obj.commentId)
+                this.$axios.post('http://localhost:9090/picture/info/selectPictureInfo',formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    this.srcList = response.data.object
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+                this.zan = this.Obj.commentLike
+            },
+            jiazai2 (){
+                const formData = new FormData()
+                formData.append('commentId', this.Obj.commentId)
+                this.$axios.post('http://localhost:9090/answer/info/selectAnswerInfo',formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    this.huifu = response.data.object
+                    // console.log(this.huifu)
+                    let objectSize = 0;
+                    for(let k in response.data.object) {
+                        objectSize++
+                    }
+                    this.max += objectSize
+                    if(this.max>1){
+                        this.count = 2
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            },
+            tianjia(fit) {
+                this.currentUrl.push(fit.pictureUrl);
+            },
+            onTextClick() {
+                // 发送事件给事件总线实例
+                this.$bus.$emit('textClicked', this.Obj);
+            }
         },
         mounted() {
             this.jiazai1();

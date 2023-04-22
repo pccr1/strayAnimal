@@ -39,7 +39,7 @@
             <!--评论-->
             <div style="float:left;margin-left:25px;margin-right: 25px;">
                 <el-badge :value="ping" class="item">    
-                    <el-link type="primary" class="el-icon-chat-dot-square" :underline="false" @click="$router.push({name:'post',params: { postId:postId }})">
+                    <el-link type="primary" class="el-icon-chat-dot-square" :underline="false" @click="tiaozhuan()">
                         评论
                     </el-link>
                 </el-badge>
@@ -122,6 +122,10 @@ export default {
             .catch(error => {
                 console.log(error);
             });
+        },
+        async tiaozhuan () {//异步函数
+            await this.$cookie.set('postId', this.postId)
+            this.$router.push({ name: 'post'});
         }
     },
     mounted() {

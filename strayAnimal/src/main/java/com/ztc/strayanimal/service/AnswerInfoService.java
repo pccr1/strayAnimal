@@ -2,6 +2,7 @@ package com.ztc.strayanimal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ztc.strayanimal.entiy.AnswerInfo;
+import com.ztc.strayanimal.entiy.CommentInfo;
 import com.ztc.strayanimal.util.JsonResult;
 
 public interface AnswerInfoService extends IService<AnswerInfo> {
@@ -12,6 +13,13 @@ public interface AnswerInfoService extends IService<AnswerInfo> {
      * @return
      */
     public JsonResult selectAnswerInfo(Long commentId);
+
+    /**
+     * 添加回复
+     * @param answerInfo
+     * @return
+     */
+    public JsonResult addAnswerInfo(AnswerInfo answerInfo);
 
     /**
      * 回复删除

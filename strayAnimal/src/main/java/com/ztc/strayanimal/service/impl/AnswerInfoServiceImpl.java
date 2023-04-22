@@ -2,6 +2,7 @@ package com.ztc.strayanimal.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ztc.strayanimal.entiy.AnswerInfo;
+import com.ztc.strayanimal.entiy.CommentInfo;
 import com.ztc.strayanimal.mapper.AnswerInfoMapper;
 import com.ztc.strayanimal.service.AnswerInfoService;
 import com.ztc.strayanimal.util.JsonResult;
@@ -34,6 +35,23 @@ public class AnswerInfoServiceImpl extends ServiceImpl<AnswerInfoMapper, AnswerI
             jsonResult = jsonResult.requestSuccess(result);
         } else {
             jsonResult = jsonResult.resultFail("没有数据");
+        }
+        return jsonResult;
+    }
+
+    /**
+     * 添加回复
+     * @param answerInfo
+     * @return
+     */
+    @Override
+    public JsonResult addAnswerInfo(AnswerInfo answerInfo) {
+        JsonResult jsonResult = new JsonResult();
+        int result = answerInfoMapper.insert(answerInfo);
+        if (result > 0) {
+            jsonResult = jsonResult.requestSuccess(null);
+        } else {
+            jsonResult = jsonResult.resultFail("发送失败！");
         }
         return jsonResult;
     }

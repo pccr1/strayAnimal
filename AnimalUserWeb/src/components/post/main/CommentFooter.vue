@@ -17,7 +17,10 @@
             :underline="false" 
             disabled>{{ toReply1 }} :</el-link>
 
-            {{ Huifu.answerText }} &nbsp;<span style="color: #939393;font-size: 1px!important">{{ Huifu.strCreateTime }}</span>
+            <span @click.self="onTextClick">
+                {{ Huifu.answerText }} &nbsp;
+            </span>      
+            <span style="color: #939393;font-size: 1px!important">{{ Huifu.strCreateTime }}</span>
         </span>
     </div>
 </template>
@@ -64,6 +67,10 @@
                 .catch(error => {
                     console.log(error);
                 });
+            },
+            onTextClick () {
+                // 发送事件给事件总线实例
+                this.$bus.$emit('textClicked1',this.reply1,this.Huifu);
             }
         },
         mounted() {

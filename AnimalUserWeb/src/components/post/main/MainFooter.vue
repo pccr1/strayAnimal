@@ -79,32 +79,32 @@ import PostComment from './PostComment.vue'
             this.zhanshi = zhanshi
           },
           show () {
-              const formData = new FormData()
-              formData.append('postId', this.$route.params.postId)
-              this.$axios.post('http://localhost:9090/post/info/selectPostInfo',formData,{
-                  headers: {
-                      'Content-Type': 'multipart/form-data'
-                  }
-              })
-              .then(response => {
-                  this.obj = response.data.object
-              })
-              .catch(error => {
-                  console.log(error);
-              });
-              
-              this.$axios.post('http://localhost:9090/comment/info/selectCommentInfo',formData,{
+            const formData = new FormData()
+            formData.append('postId', this.$cookie.get('postId'))
+            this.$axios.post('http://localhost:9090/post/info/selectPostInfo',formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-              })
-              .then(response => {
-                  this.obj1 = response.data.object 
-                  this.max += this.obj1.length
-              })
-              .catch(error => {
+            })
+            .then(response => {
+                this.obj = response.data.object
+            })
+            .catch(error => {
                 console.log(error);
-              });
+            });
+            
+            this.$axios.post('http://localhost:9090/comment/info/selectCommentInfo',formData,{
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
+            })
+            .then(response => {
+                this.obj1 = response.data.object 
+                this.max += this.obj1.length
+            })
+            .catch(error => {
+              console.log(error);
+            });
           },
         },
         mounted() {

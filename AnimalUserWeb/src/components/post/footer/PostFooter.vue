@@ -13,7 +13,7 @@
                 <el-input
                 ref="wenben"
                 type="textarea"
-                placeholder="请输入内容"
+                :placeholder=textOn
                 v-model="text"
                 maxlength="255"
                 rows="1"
@@ -74,7 +74,7 @@
                 circle></el-button>
             </div>
         </div>
-        <div class="coli" v-show="!isSecondButtonVisible">
+        <div class="coli" v-show="!isFirstButtonVisible">
             <el-button 
             size="mini" 
             icon="el-icon-star-off" 
@@ -115,13 +115,20 @@
         name:'PostFooter',
         data() {
             return {
+                push: false,
+                Obj:'',//暂存评论信息
+                Objbu: false,
+                Huifu:'',//暂存回复信息
+                Huifubu: false,
                 attention: false,//关注
                 collect: false,//收藏
                 like: false,//点赞
                 text: '',
+                textOn:'请输入内容',//文本框默认显示
                 imageList: [],//处理后图片
                 images:[],//原版
                 url:'',//暂存图片网址
+                cooid:null,//暂存评论id
                 isFocus:false,
                 isThirdButtonVisible : false,
                 isFirstButtonVisible : false,
@@ -155,16 +162,16 @@
                 // this.imageList.push(response.data.url)
             },
             beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
-                if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
-                    return false;
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                    return false;
-                }
+                // const isJPG = file.type === 'image/jpeg';
+                // const isLt2M = file.size / 1024 / 1024 < 2;
+                // if (!isJPG) {
+                //     this.$message.error('上传头像图片只能是 JPG 格式!');
+                //     return false;
+                // }
+                // if (!isLt2M) {
+                //     this.$message.error('上传头像图片大小不能超过 2MB!');
+                //     return false;
+                // }
                 this.images.push(file)
                 const reader = new FileReader()
                 reader.onload = event => {
@@ -179,72 +186,133 @@
                 if(this.text === ''){
                     this.$message.error('不能发送空的内容');
                 }else{
-                    const formData = new FormData()
-                    formData.append('postId', this.$route.params.postId)
-                    formData.append('userId', this.$cookie.get('userId'))
-                    formData.append('commentText', this.text)
+                    if(this.textOn === '请输入内容')
+                    {
+                        const formData = new FormData()
+                        formData.append('postId', this.$cookie.get('postId'))
+                        formData.append('userId', this.$cookie.get('userId'))
+                        formData.append('commentText', this.text)
 
-                    this.$axios.post('http://localhost:9090/comment/info/insertCommentInfo', formData,{
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
+                        this.$axios.post('http://localhost:9090/comment/info/insertCommentInfo', formData,{
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                        .then(response => {
+                            this.push = true
+                            this.cooid = Number(response.data.object)
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+
+                        for(let i = 0 ; i < this.images.length ; i++){
+                            this.saveImageMousedown1(i)
+                            .then(url => {
+                                this.saveImageMousedown2(url)
+                            })
+                            .catch(error => {
+                                // 处理错误
+                                console.log(error);
+                            });
                         }
-                    })
-                    .then(response => {
-                        console.log(response.data);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                    }else{
+                        if(this.Objbu){
+                            const formData = new FormData()
+                            formData.append('commentId', this.Obj.commentId)
+                            formData.append('answerUserId', this.$cookie.get('userId'))
+                            formData.append('toBeAnswerUserId', this.Obj.userId)
+                            formData.append('answerText', this.text)
 
-                    for(let i = 0 ; i < this.images.length ; i++){
-                        this.saveImageMousedown1(i)
-                        this.saveImageMousedown2(this.url)
+                            this.$axios.post('http://localhost:9090/answer/info/addAnswerInfo', formData,{
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            })
+                            .then(response => {
+                                this.push = true
+                                console.log(response.data.object)
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
+                        }
+                        if(this.Huifubu){
+                            const formData = new FormData()
+                            formData.append('commentId', this.Huifu.commentId)
+                            formData.append('answerUserId', this.$cookie.get('userId'))
+                            formData.append('toBeAnswerUserId', this.Huifu.answerUserId)
+                            formData.append('answerText', this.text)
+
+                            this.$axios.post('http://localhost:9090/answer/info/addAnswerInfo', formData,{
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            })
+                            .then(response => {
+                                this.push = true
+                                console.log(response.data.object)
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
+                        }
                     }
-
                     this.text = '';
                     this.imageList = [];
                     this.images = [];
-                    // 弹出提示
-                    this.$message({
-                        message: '发送成功',
-                        type: 'success'
-                    });
+                    if(!this.push){
+                        // 弹出提示
+                        this.push = false
+                        // this.$forceUpdate();
+                        this.$message({
+                            message: '发送成功',
+                            type: 'success'
+                        });
+                    }else{
+                        this.$message.error('发送失败');
+                    }
                 }
             },
             saveImageMousedown1(i) {
-                const formData = new FormData()
-                formData.append('image', this.images[i])
+                return new Promise((resolve, reject) => {
+                    const formData = new FormData()
+                    formData.append('image', this.images[i])
 
-                this.$axios.post('http://localhost:9090/upload', formData,{
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(response => {
-                    this.url = response.data.object
-                })
-                .catch(error => {
-                    console.log(error);
+                    this.$axios.post('http://localhost:9090/upload', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                        .then(response => {
+                            // console.log(response.data.object)
+                            resolve(response.data.object)
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            reject(error)
+                        });
                 });
             },
-            saveImageMousedown2 (url){
-                const formData = new FormData()
-                formData.append('postId', this.$route.params.postId)
-                // console.log(url)
-                formData.append('pictureUrl', url)
+            saveImageMousedown2(url) {
+                if (url != '') {
+                    const formData = new FormData()
+                    formData.append('commentId', this.cooid)
+                    // console.log(url)
+                    formData.append('pictureUrl', url)
 
-                this.$axios.post('http://localhost:9090/picture/info/addPicture', formData,{
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-                this.url = ''
+                    this.$axios.post('http://localhost:9090/picture/info/addPicture', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                        .then(response => {
+                            console.log(response.data);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
             },
             handleFocus(e) {
                 this.isFocus = true;
@@ -267,19 +335,36 @@
             },
             handleBlur() {
                 this.isFocus = false;
+                this.textOn = '请输入内容'
+                this.Obj = ''
+                this.Huifu = ''
+                this.Objbu = false
+                this.Huifubu = false
                 this.handleInput();
             },
             handleInput() {
                 // 只有当文本框获取焦点时，前两个按钮才可见
                 if (this.isFocus) {
-                    this.isThirdButtonVisible = false;
-                    this.isFirstButtonVisible = true;
-                    this.isSecondButtonVisible = true;
-                    // 当文本框内有输入，或者添加了图片时，第三个按钮可见，前两个按钮也可见
-                    if (this.text || this.imageList.length > 0) {
-                        this.isThirdButtonVisible = true;
+                    if(this.textOn === '请输入内容'){
+                        this.isThirdButtonVisible = false;
                         this.isFirstButtonVisible = true;
                         this.isSecondButtonVisible = true;
+                        // 当文本框内有输入，或者添加了图片时，第三个按钮可见，前两个按钮也可见
+                        if (this.text || this.imageList.length > 0) {
+                            this.isThirdButtonVisible = true;
+                            this.isFirstButtonVisible = true;
+                            this.isSecondButtonVisible = true;
+                        }
+                    }else{
+                        this.isThirdButtonVisible = false;
+                        this.isFirstButtonVisible = true;
+                        this.isSecondButtonVisible = false;
+                        // 当文本框内有输入，或者添加了图片时，第三个按钮可见，前两个按钮也可见
+                        if (this.text || this.imageList.length > 0) {
+                            this.isThirdButtonVisible = true;
+                            this.isFirstButtonVisible = true;
+                            this.isSecondButtonVisible = false;
+                        }
                     }
                 } else {
                     this.isThirdButtonVisible = false;
@@ -290,11 +375,37 @@
             deleteImage(index) {
                 this.imageList.splice(index, 1);
             },
+            demo (Obj) {
+                this.textOn = '回复 ' + Obj.userNetWorkName
+                this.Obj = Obj
+                this.Objbu = true
+                this.Huifubu = false
+                // 获取文本框的 DOM 引用
+                const inputElement = this.$refs.wenben;
+                // 调用文本框的 focus() 方法
+                inputElement.focus();
+            },
+            demo1 (reply1,Huifu) {
+                this.textOn = '回复 ' + reply1
+                this.Huifu = Huifu
+                this.Huifubu = true
+                this.Objbu = false
+                // 获取文本框的 DOM 引用
+                const inputElement = this.$refs.wenben;
+                // 调用文本框的 focus() 方法
+                inputElement.focus();
+            },
         },
         mounted() {
             // 监听文本框的输入状态
+            this.$bus.$on('textClicked',this.demo)
+            this.$bus.$on('textClicked1',this.demo1)
             this.$refs.wenben.$el.addEventListener('input', this.handleInput);
         },
+        beforeDestroy() {
+            this.$bus.$off("textClicked")
+            this.$bus.$off("textClicked1")
+        }
     }
     
 </script>
