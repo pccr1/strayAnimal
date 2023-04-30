@@ -19,12 +19,12 @@ public class PostInfoServiceImpl extends ServiceImpl<PostInfoMapper, PostInfo> i
 
     /**
      * 帖子预览
-     * @param postHeadline
+     * @param postInfo
      * @return
      */
     @Override
-    public JsonResult selectPostInfo(String postHeadline) {
-        List<PostInfo> result = postInfoMapper.selectPostInfo(postHeadline);
+    public JsonResult selectPostInfo(PostInfo postInfo) {
+        List<PostInfo> result = postInfoMapper.selectPostInfo(postInfo);
         JsonResult jsonResult = new JsonResult();
         for (int i = 0; i < result.size(); i++) {
             String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(result.get(i).getCreateTime());
@@ -46,13 +46,10 @@ public class PostInfoServiceImpl extends ServiceImpl<PostInfoMapper, PostInfo> i
      */
     @Override
     public JsonResult addPostInfo(PostInfo postInfo) {
-        PostInfo postInfo1 = new PostInfo();
-        postInfo1.setPostHeadline(postInfo.getPostHeadline());
-        postInfo1.setPostText(postInfo.getPostText());
-        int result = postInfoMapper.insertPostInfo(postInfo1);
+        int result = postInfoMapper.insert(postInfo);
         JsonResult jsonResult = new JsonResult();
         if (result > 0) {
-            jsonResult = jsonResult.requestSuccess(postInfo1.getPostId());
+            jsonResult = jsonResult.requestSuccess(postInfo.getPostId());
         } else {
             jsonResult = jsonResult.resultFail("帖子发布失败！");
         }

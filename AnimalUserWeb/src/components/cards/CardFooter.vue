@@ -78,7 +78,9 @@ export default {
             if (this.thumbsUp) {
                 const formData = new FormData()
                 formData.append('postId', this.postId)
-                this.$axios.post('http://localhost:9090/post/info/likeIs',formData,{
+                
+                const fullUrl = this.$myVariable + 'post/info/likeIs';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -93,7 +95,8 @@ export default {
             } else {
                 const formData = new FormData()
                 formData.append('postId', this.postId)
-                this.$axios.post('http://localhost:9090/post/info/noLikeIs',formData,{
+                const fullUrl = this.$myVariable + 'post/info/noLikeIs';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -111,7 +114,8 @@ export default {
         pinglun () {
             const formData = new FormData()
             formData.append('postId', this.postId)
-            this.$axios.post('http://localhost:9090/comment/info/selectCommentInfo',formData,{
+            const fullUrl = this.$myVariable + 'comment/info/selectCommentInfo';
+            this.$axios.post(fullUrl, formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

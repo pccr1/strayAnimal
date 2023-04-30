@@ -50,7 +50,8 @@ export default {
         picture () {
             const formData = new FormData()
             formData.append('postId', this.postId)
-            this.$axios.post('http://localhost:9090/picture/info/selectPictureInfo',formData,{
+            const fullUrl = this.$myVariable + 'picture/info/selectPictureInfo';
+            this.$axios.post(fullUrl, formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

@@ -1,16 +1,16 @@
 <template>
     <div class="main">
         <div class="one">
-            <MainCard :shuliang=guanzhu name="关注" />
+            <MainCard :shuliang="obj.userConcern" name="关注" />
         </div>
         <div class="one">
-            <MainCard :shuliang=fensi name="粉丝" />
+            <MainCard :shuliang="obj.userFans" name="粉丝" />
         </div>
         <div class="one">
-            <MainCard :shuliang=huozan name="获赞" />
+            <MainCard :shuliang="obj.userLike" name="获赞" />
         </div>
-         <div class="one">
-            <MainCard :shuliang=shoucang name="收藏" />
+        <div class="one">
+            <MainCard :shuliang=55 name="收藏" />
         </div>
     </div>
 </template>
@@ -25,12 +25,30 @@ import MainCard from './MainCard.vue';
         },
         data() {
             return{
-                guanzhu:16,
-                fensi:3,
-                huozan:144,
-                shoucang:42,
+                obj:'',
             }
-        }
+        },
+        methods: {
+            show() {
+                const formData = new FormData()
+                formData.append('userId', this.$cookie.get('userId'))
+                const fullUrl = this.$myVariable + 'user/info/selectUser';
+                this.$axios.post(fullUrl, formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    this.obj = response.data.object
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+        },
+        mounted() {
+            this.show();
+        },
     }
 </script>
 

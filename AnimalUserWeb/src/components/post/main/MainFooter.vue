@@ -81,7 +81,8 @@ import PostComment from './PostComment.vue'
           show () {
             const formData = new FormData()
             formData.append('postId', this.$cookie.get('postId'))
-            this.$axios.post('http://localhost:9090/post/info/selectPostInfo',formData,{
+            const fullUrl = this.$myVariable + 'post/info/selectPostInfo';
+            this.$axios.post(fullUrl, formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -93,7 +94,8 @@ import PostComment from './PostComment.vue'
                 console.log(error);
             });
             
-            this.$axios.post('http://localhost:9090/comment/info/selectCommentInfo',formData,{
+            const fullUr = this.$myVariable + 'comment/info/selectCommentInfo';
+            this.$axios.post(fullUr, formData,{
               headers: {
                   'Content-Type': 'multipart/form-data'
               }

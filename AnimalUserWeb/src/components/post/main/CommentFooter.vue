@@ -41,7 +41,8 @@
             reply () {//回复者
                 const formData = new FormData()
                 formData.append('userId', this.Huifu.answerUserId)
-                this.$axios.post('http://localhost:9090/user/info/selectUser',formData,{
+                const fullUrl = this.$myVariable + 'user/info/selectUser';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -56,7 +57,8 @@
             toReply () {//被回复者
                 const formData = new FormData()
                 formData.append('userId', this.Huifu.toBeAnswerUserId)
-                this.$axios.post('http://localhost:9090/user/info/selectUser',formData,{
+                const fullUrl = this.$myVariable + 'user/info/selectUser';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }

@@ -104,7 +104,8 @@ import CommentFooter from './CommentFooter.vue';
             if (!this.like) {
                 const formData = new FormData()
                 formData.append('commentId', this.Obj.commentId)
-                this.$axios.post('http://localhost:9090/comment/info/likeIs',formData,{
+                const fullUrl = this.$myVariable + 'comment/info/likeIs';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -120,7 +121,8 @@ import CommentFooter from './CommentFooter.vue';
             } else {
                 const formData = new FormData()
                 formData.append('commentId', this.Obj.commentId)
-                this.$axios.post('http://localhost:9090/comment/info/noLikeIs',formData,{
+                const fullUrl = this.$myVariable + 'comment/info/noLikeIs';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -138,7 +140,8 @@ import CommentFooter from './CommentFooter.vue';
             jiazai1 () {
                 const formData = new FormData()
                 formData.append('commentId', this.Obj.commentId)
-                this.$axios.post('http://localhost:9090/picture/info/selectPictureInfo',formData,{
+                const fullUrl = this.$myVariable + 'picture/info/selectPictureInfo';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -154,7 +157,8 @@ import CommentFooter from './CommentFooter.vue';
             jiazai2 (){
                 const formData = new FormData()
                 formData.append('commentId', this.Obj.commentId)
-                this.$axios.post('http://localhost:9090/answer/info/selectAnswerInfo',formData,{
+                const fullUrl = this.$myVariable + 'answer/info/selectAnswerInfo';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }

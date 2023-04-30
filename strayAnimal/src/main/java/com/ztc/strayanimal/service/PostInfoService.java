@@ -8,10 +8,10 @@ public interface PostInfoService extends IService<PostInfo> {
 
     /**
      * 帖子预览
-     * @param postHeadline
+     * @param postInfo
      * @return
      */
-    public JsonResult selectPostInfo(String postHeadline);
+    public JsonResult selectPostInfo(PostInfo postInfo);
 
     /**
      * 发布帖子

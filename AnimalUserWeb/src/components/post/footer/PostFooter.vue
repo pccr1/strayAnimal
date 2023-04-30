@@ -135,7 +135,6 @@
                 isSecondButtonVisible : false,
                 showEmojis:false,
                 emojis: ["😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆", "😉", "😊", "😋", "😎", "😍", "😘", "😗", "😙", "😚","🥵","😭","🤡"],
-            
             }
         },
         computed: {
@@ -193,7 +192,8 @@
                         formData.append('userId', this.$cookie.get('userId'))
                         formData.append('commentText', this.text)
 
-                        this.$axios.post('http://localhost:9090/comment/info/insertCommentInfo', formData,{
+                        const fullUrl = this.$myVariable + 'comment/info/insertCommentInfo';
+                        this.$axios.post(fullUrl, formData,{
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
@@ -224,7 +224,8 @@
                             formData.append('toBeAnswerUserId', this.Obj.userId)
                             formData.append('answerText', this.text)
 
-                            this.$axios.post('http://localhost:9090/answer/info/addAnswerInfo', formData,{
+                            const fullUrl = this.$myVariable + 'answer/info/addAnswerInfo';
+                            this.$axios.post(fullUrl, formData,{
                                 headers: {
                                     'Content-Type': 'multipart/form-data'
                                 }
@@ -244,7 +245,8 @@
                             formData.append('toBeAnswerUserId', this.Huifu.answerUserId)
                             formData.append('answerText', this.text)
 
-                            this.$axios.post('http://localhost:9090/answer/info/addAnswerInfo', formData,{
+                            const fullUrl = this.$myVariable + 'answer/info/addAnswerInfo';
+                            this.$axios.post(fullUrl, formData,{
                                 headers: {
                                     'Content-Type': 'multipart/form-data'
                                 }
@@ -279,7 +281,8 @@
                     const formData = new FormData()
                     formData.append('image', this.images[i])
 
-                    this.$axios.post('http://localhost:9090/upload', formData, {
+                    const fullUrl = this.$myVariable + 'upload';
+                    this.$axios.post(fullUrl, formData,{
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
@@ -301,7 +304,8 @@
                     // console.log(url)
                     formData.append('pictureUrl', url)
 
-                    this.$axios.post('http://localhost:9090/picture/info/addPicture', formData, {
+                    const fullUrl = this.$myVariable + 'picture/info/addPicture';
+                    this.$axios.post(fullUrl, formData,{
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }

@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("upload")
 public class UploadController {

@@ -18,12 +18,12 @@ public class PostController {
 
     /**
      * 查询帖子
-     * @param postHeadline
+     * @param postInfo
      * @return
      */
     @PostMapping("/selectPostInfo")
-    public JsonResult selectPostInfo(@Nullable String postHeadline) {
-        return postInfoService.selectPostInfo(postHeadline);
+    public JsonResult selectPostInfo(@ModelAttribute PostInfo postInfo) {
+        return postInfoService.selectPostInfo(postInfo);
     }
 
     /**

@@ -7,7 +7,7 @@
         infinite-scroll-disabled="disabled"
         infinite-scroll-distance="10px">
         <li v-for="i in count" :key="i" class="list-item">
-            <HomeCard :Obj="obj[i-1]" />
+            <HomeCard :Obj="obj[i-1]" v-if="obj[i-1]"/>
         </li>
       </ul>
       
@@ -51,14 +51,19 @@ import HomeCard from '@/components/cards/HomeCard.vue'
             },
             show () {
                 const formData = new FormData()
-                this.$axios.post('http://localhost:9090/post/info/selectPostInfo',formData,{
+                const fullUrl = this.$myVariable + 'post/info/selectPostInfo';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
                 .then(response => {
-                    this.max += Number(response.data.code)
                     this.obj = response.data.object
+                    let objectSize = 0;
+                    for(let k in response.data.object) {
+                        objectSize++
+                    }
+                    this.max += objectSize
                     // console.log(this.obj)
                 })
                 .catch(error => {

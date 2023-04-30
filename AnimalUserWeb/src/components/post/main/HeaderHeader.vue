@@ -1,5 +1,5 @@
 <template>
-    <div class="block">
+    <div v-if="srcList" class="block">
         <el-carousel :autoplay="false" trigger="click" height="150px">
             <el-carousel-item v-for="obj in srcList" :key="obj.pictureid" >
                 <el-image  
@@ -29,7 +29,8 @@
             picture () {
                 const formData = new FormData()
                 formData.append('postId', this.postId)
-                this.$axios.post('http://localhost:9090/picture/info/selectPictureInfo',formData,{
+                const fullUrl = this.$myVariable + 'picture/info/selectPictureInfo';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }

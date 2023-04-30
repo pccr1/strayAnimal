@@ -10,10 +10,10 @@ public interface PostInfoMapper extends BaseMapper<PostInfo> {
 
     /**
      * 帖子预览
-     * @param postHeadline
+     * @param postInfo
      * @return
      */
-    List<PostInfo> selectPostInfo(@Param("postHeadline")String postHeadline);
+    List<PostInfo> selectPostInfo(@Param("po")PostInfo postInfo);
 
     /**
      * 添加帖子

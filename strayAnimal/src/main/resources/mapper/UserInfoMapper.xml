@@ -20,7 +20,8 @@
     <!--查看详情-->
     <select id="selectUser" resultType="com.ztc.strayanimal.entiy.UserInfo">
         SELECT user_id,user_net_work_name,user_avatar,user_account,user_level,user_realname,user_ID_number,
-               user_sex,user_age,user_birthday,user_nation,user_phone,user_email,user_address,create_time,update_time
+               user_sex,user_age,user_birthday,user_nation,user_phone,user_email,user_address,create_time,update_time,
+               user_title,user_concern,user_fans,user_like
         FROM user_info
         WHERE is_delete = 0
           and user_id = #{userId}

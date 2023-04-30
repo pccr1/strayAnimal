@@ -9,7 +9,7 @@ import App from './App.vue'
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false
-
+Vue.prototype.$myVariable = 'http://localhost:9090/'
 
 new Vue({
   router,

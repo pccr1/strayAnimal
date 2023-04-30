@@ -38,7 +38,9 @@
               const formData = new FormData()
               formData.append('userAccount', this.username)
               formData.append('userPassword', this.password)
-              this.$axios.post('http://localhost:9090/user/info/selectUserAccount',formData,{
+              
+              const fullUrl = this.$myVariable + 'user/info/selectUserAccount';
+              this.$axios.post(fullUrl, formData,{
                   headers: {
                       'Content-Type': 'multipart/form-data'
                   }

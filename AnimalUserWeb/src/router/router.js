@@ -13,6 +13,7 @@ import UserMe from '@/views/UserMe.vue'
 import MeData from '@/views/MeData.vue'
 import UserLogin from '@/views/UserLogin.vue'
 import UserRegister from '@/views/UserRegister.vue'
+import UserAdd from '@/views/UserAdd.vue'
 
 // push方法重写
 const originalPush = Router.prototype.push
@@ -65,7 +66,7 @@ const routes=[
         path:'me',
         component:UserMe,
         meta:{
-          keepAlive: true,
+          // keepAlive: true,
         },
         children:[
           {
@@ -73,7 +74,7 @@ const routes=[
             path:'data',
             component:MeData,
             meta:{
-              keepAlive: true,
+              // keepAlive: true,
             }
           }
         ]
@@ -85,7 +86,7 @@ const routes=[
     path:'/post',
     component:UserPost,
     meta:{
-      keepAlive: true,
+      // keepAlive: true,
     }
   },
   {
@@ -131,6 +132,11 @@ const routes=[
     name:'register',
     path:'/register',
     component:UserRegister,
+  },
+  {
+    name:'add',
+    path:'/add',
+    component:UserAdd,
   },
   
 ]

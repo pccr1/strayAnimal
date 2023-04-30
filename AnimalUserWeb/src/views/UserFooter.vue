@@ -16,7 +16,8 @@
             round>社区</el-button>
 
             <el-button 
-            icon="el-icon-plus"  
+            icon="el-icon-plus" 
+            @click="$router.push({name:'add'})"
             circle></el-button>
 
             <el-button 

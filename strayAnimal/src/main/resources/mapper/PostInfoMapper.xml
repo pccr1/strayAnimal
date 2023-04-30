@@ -11,16 +11,14 @@
         FROM post_info AS po JOIN user_info AS u
         ON po.user_id = u.user_id
         WHERE po.is_delete = 0
-        <if test="postHeadline != null and postHeadline != ''">
-            and po.post_headline like CONCAT('%',#{postHeadline},'%')
+        <if test="po.postHeadline != null and po.postHeadline != ''">
+            and po.post_headline like CONCAT('%',#{po.postHeadline},'%')
+        </if>
+        <if test="po.postId != null and po.postId != ''">
+            and po.post_id = #{po.postId}
         </if>
         ORDER BY po.create_time DESC;
     </select>
-
-    <!--添加帖子-->
-    <insert id="insertPostInfo" parameterType="com.ztc.strayanimal.entiy.PostInfo" useGeneratedKeys="true" keyProperty="postId">
-        INSERT INTO post_info (user_id, post_headline, post_text) VALUES (#{userId}, #{postHeadline}, #{postText})
-    </insert>
 
     <!--点赞-->
     <update id="likeIs">

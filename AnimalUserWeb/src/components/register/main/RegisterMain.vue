@@ -40,7 +40,8 @@
                 formData.append('userPassword', this.password)
                 formData.append('userPhone', this.username)
                 formData.append('userNetWorkName', '用户' + this.username)
-                this.$axios.post('http://localhost:9090/user/info/addUser',formData,{
+                const fullUrl = this.$myVariable + 'user/info/addUser';
+                this.$axios.post(fullUrl, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
